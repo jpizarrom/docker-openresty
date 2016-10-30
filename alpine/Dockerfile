@@ -39,6 +39,7 @@ ARG RESTY_CONFIG_OPTIONS="\
     --with-stream \
     --with-stream_ssl_module \
     --with-threads \
+    --add-module=ngx_aws_auth \
     "
 
 # These are not intended to be user-specified
@@ -62,6 +63,7 @@ RUN \
         perl-dev \
         readline-dev \
         zlib-dev \
+        git \
     && apk add --no-cache \
         gd \
         geoip \
@@ -76,6 +78,7 @@ RUN \
     && curl -fSL https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \
     && tar xzf openresty-${RESTY_VERSION}.tar.gz \
     && cd /tmp/openresty-${RESTY_VERSION} \
+    && git clone -b AuthV2 https://github.com/jpizarrom/ngx_aws_auth.git \
     && ./configure -j${RESTY_J} ${_RESTY_CONFIG_DEPS} ${RESTY_CONFIG_OPTIONS} \
     && make -j${RESTY_J} \
     && make -j${RESTY_J} install \
